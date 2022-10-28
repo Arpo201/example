@@ -1,0 +1,19 @@
+events {
+  worker_connections  4096;  ## Default: 1024
+}
+
+http {
+  server{
+    listen 80;
+    server_name a.site.me;
+    location / {
+      proxy_pass http://wizardly_ardinghelli;
+    }
+    location /a/ {
+      proxy_pass http://wizardly_ardinghelli/;
+    }
+  }
+}
+
+127.0.0.1
+pass container name
