@@ -1,12 +1,12 @@
 version: '3'
 services:
-  nginx:
+  nginx-lb:
+    container_name: nginx-lb
     image: nginx:latest
-    container_name: nginx
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx-lb/nginx.conf:/etc/nginx/nginx.conf
   web1:
     container_name: web1
     image: httpd:alpine
