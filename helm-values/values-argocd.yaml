@@ -1,0 +1,20 @@
+# helm upgrade --install argo-cd -f ~/Github/eks/helm-values/values-argocd.yaml argo/argo-cd --version 5.35.1
+
+volumePermissions:
+  enabled: true
+server:
+  ingress:
+    enabled: true
+    annotations: 
+      passthrough: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+      alb.ingress.kubernetes.io/backend-protocol: HTTPS
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+      alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+    ingressClassName: "nginx"
+    hosts: 
+    - argocd.arpo.website
+    https: true
+configs:
+  params:
+    server.insecure: true 
