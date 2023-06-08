@@ -1,0 +1,1 @@
+eksctl create cluster -f vendor_cluster.yaml
