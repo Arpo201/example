@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.nginx.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+      app.kubernetes.io/name: {{ .Release.Name }}
+  replicas: {{ .Values.nginx.replicas }}
+  template:
+    metadata:
+      labels:
+        app: nginx
+        app.kubernetes.io/name: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.nginx.image }}
+        ports:
+        - containerPort: 80

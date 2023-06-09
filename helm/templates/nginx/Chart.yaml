@@ -1,0 +1,9 @@
+# helm upgrade --install nginx-test -f values.yaml .
+apiVersion: v1
+description: Nginx Helm Chart
+name: Nginx
+version: 2.0.0
+appVersion: 1.0.0
+maintainers:
+  - name: Sithiparp
+    email: Sithiparp@appman.co.th

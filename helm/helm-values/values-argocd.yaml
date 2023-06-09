@@ -1,4 +1,4 @@
-# helm upgrade --install argo-cd -f ~/Github/eks/helm-values/values-argocd.yaml argo/argo-cd --version 5.35.1
+# helm upgrade --install argo-cd -f ~/Github/example/helm-values/values-argocd.yaml argo/argo-cd --version 5.35.1
 
 volumePermissions:
   enabled: true

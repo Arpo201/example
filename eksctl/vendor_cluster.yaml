@@ -14,18 +14,18 @@ nodeGroups:
     minSize: 1
     maxSize: 1
 
-iamIdentityMappings:
-  - arn: arn:aws:iam::423432:role/Abcdef
-    groups:
-      - system:masters
-    username: PowerVendor
-    noDuplicateARNs: true # prevents shadowing of ARNs
+# iamIdentityMappings:
+#   - arn: arn:aws:iam::423432:role/Abcdef
+#     groups:
+#       - system:masters
+#     username: PowerVendor
+#     noDuplicateARNs: true # prevents shadowing of ARNs
 
-  - arn: arn:aws:iam::423432:role/Abcdef
-    username: PowerVendor
-    noDuplicateARNs: true # prevents shadowing of ARNs
+#   - arn: arn:aws:iam::423432:role/Abcdef
+#     username: PowerVendor
+#     noDuplicateARNs: true # prevents shadowing of ARNs
 
-  # - serviceName: emr-containers
-  #   namespace: default # serviceName requires namespace
+#   # - serviceName: emr-containers
+#   #   namespace: default # serviceName requires namespace
 
-  - account: "423432" # account must be configured with no other options
+#   - account: "423432" # account must be configured with no other options
