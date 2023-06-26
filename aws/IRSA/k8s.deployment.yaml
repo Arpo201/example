@@ -1,0 +1,37 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backup-postgres-deployment
+  labels:
+    app: backup-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup-postgres
+  template:
+    metadata:
+      labels:
+        app: backup-postgres
+    spec:
+      serviceAccountName: backup-postgres
+      containers:
+        - name: backup-postgres
+          image: node:18.16-alpine
+          command: ["sleep", "infinity"]
+          env:
+            - name: PGHOST
+              value: example.43njijfnsk.ap-southeast-1.rds.amazonaws.com
+            - name: PGDATABASE
+              value: database
+            - name: PGUSER
+              value: arpo
+            - name: PGPASSWORD
+              value: "2341"
+            - name: S3_BUCKET_NAME
+              value: arpo-bucket
+            - name: S3_REGION
+              value: ap-southeast-1
+            - name: AWS_SDK_LOAD_CONFIG
+              value: "1"
