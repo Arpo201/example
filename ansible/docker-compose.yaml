@@ -1,0 +1,30 @@
+services:
+  ansible:
+    image: ubuntu:latest
+    container_name: ansible
+    stdin_open: true
+    tty: true
+    command: |
+      bash -c "apt update && \
+      apt upgrade -y && \
+      apt install pip ssh -y && \
+      pip install ansible && \
+      exec bash
+      "
+    volumes:
+      - ./:/root
+      - ./ssh/id_rsa:/root/.ssh
+  mongodb:
+    image: ubuntu:latest
+    container_name: mongodb
+    stdin_open: true
+    tty: true
+    command: |
+      bash -c "apt update && \
+      apt upgrade -y && \
+      apt install ssh -y && \
+      service ssh start && \
+      exec bash
+      "
+    volumes:
+      - ./ssh/id_rsa.pub:/root/.ssh/authorized_keys
