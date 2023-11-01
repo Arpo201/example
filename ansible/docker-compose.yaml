@@ -13,7 +13,6 @@ services:
       "
     volumes:
       - ./:/root
-      - ./ssh/id_rsa:/root/.ssh
   mongodb:
     image: ubuntu:latest
     container_name: mongodb
@@ -27,4 +26,4 @@ services:
       exec bash
       "
     volumes:
-      - ./ssh/id_rsa.pub:/root/.ssh/authorized_keys
+      - ./.ssh/id_rsa.pub:/root/.ssh/authorized_keys

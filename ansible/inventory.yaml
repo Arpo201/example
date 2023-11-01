@@ -1,4 +1,4 @@
-target:
+databases:
   hosts:
     mongodb: 
       ansible_host: mongodb

@@ -1,2 +1,7 @@
 *env
 *modules
+
+# Ansible
+*.cache
+*.ansible
+.bash_history
