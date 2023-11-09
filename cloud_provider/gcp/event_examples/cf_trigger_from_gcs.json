@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "specversion": "1.0",
+    "id": "1234",
+    "source": "//storage.googleapis.com/projects/_/buckets/test_bucket",
+    "type": "google.cloud.storage.object.v1.finalized",
+    "datacontenttype": "application/json",
+    "subject": "objects/FOLDER/FILE.txt",
+    "time": "2023-11-09T05:42:08.290863Z",
+    "bucket": "test_bucket"
+  },
+  "data": {
+    "kind": "storage#object",
+    "id": "test_bucket/FOLDER/FILE.txt/5678",
+    "selfLink": "https://www.googleapis.com/storage/v1/b/test_bucket/o/FOLDER%2FFILE.txt",
+    "name": "FOLDER/FILE.txt",
+    "bucket": "test_bucket",
+    "generation": "5678",
+    "metageneration": "1",
+    "contentType": "text/plain",
+    "timeCreated": "2023-11-09T05:42:08.290Z",
+    "updated": "2023-11-09T05:42:08.290Z",
+    "storageClass": "STANDARD",
+    "timeStorageClassUpdated": "2023-11-09T05:42:08.290Z",
+    "size": "505",
+    "md5Hash": "lQwjiMCpgSmhBLkSnlEYQ2w==",
+    "mediaLink": "https://storage.googleapis.com/download/storage/v1/b/test_bucket/o/FOLDER%2FFILE.txt?generation=5678&alt=txt",
+    "crc32c": "q4jW5w==",
+    "etag": "CL+k/NCitoIDEME="
+  }
+}
