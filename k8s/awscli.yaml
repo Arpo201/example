@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-cli
+  labels:
+    app: aws-cli
+spec:
+  selector:
+    matchLabels:
+      app: aws-cli
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aws-cli
+    spec:
+      containers:
+      - name: aws-cli
+        image: amazon/aws-cli
+        imagePullPolicy: Always
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
