@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pghero
+  labels:
+    app: pghero
+spec:
+  selector:
+    matchLabels:
+      app: pghero
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pghero
+    spec:
+      containers:
+      - name: pghero
+        image: ankane/pghero
+        imagePullPolicy: Always
+        ports:
+          - name: pghero
+            containerPort: 8080
+            protocol: TCP
+        volumeMounts:
+        - name: pghero-configmap
+          mountPath: /app/config/pghero.yml
+          readOnly: true
+          subPath: pghero.yml
+        resources:
+          requests:
+            cpu: 1m
+            memory: 200Mi
+          limits:
+            cpu: 10m
+            memory: 400Mi
+        env:
+        - name: PGHERO_USERNAME
+          value: USERNAME
+        - name: PGHERO_PASSWORD
+          value: PASSWORD
+        # - name: DATABASE_URL
+        #   value: postgres://USERNAME:PASSWORD@ENDPOINT:5432/DATABASE
+      volumes:
+      - name: pghero-configmap
+        configMap:
+          defaultMode: 0644
+          name: pghero
+      
