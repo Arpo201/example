@@ -1,0 +1,15 @@
+# Ref: https://manpages.ubuntu.com/manpages/jammy/man8/zic.8.html
+# Timezone files: /usr/share/zoneinfo
+# export TZ=custom
+
+# Type: Rule | Name: custom | Start: year | Stop: year | Type: zic type | Start_month: month | Start_day: day | Start_time: time | Shift_time: time | letter\s: rule description
+Rule custom minimum maximum - Jan Mon>=1 00:00 07:00 custom
+
+# Type: Zone | Name: custom | Time shift: decrease 8280 hours | Rule: custom (line above) | Format: description of time
+Zone custom -6192 custom -hh
+
+# Type: Link | Target: zone name | Link_name: any_name
+Link custom custom
+
+
+# Apply command: zic zic_custom_timezone

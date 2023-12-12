@@ -24,11 +24,11 @@ spec:
           # env:
           #   - name: TZ
           #     value: custom
-      #     volumeMounts:
-      #       - name: tz-config
-      #         mountPath: /etc/localtime
-      # volumes:
-      #   - name: tz-config
-      #     hostPath:
-      #       path: /usr/share/zoneinfo/Asia/Bangkok
-      #       type: File
+          volumeMounts:
+            - name: tz-config
+              mountPath: /etc/localtime
+      volumes:
+        - name: tz-config
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Bangkok
+            type: File
