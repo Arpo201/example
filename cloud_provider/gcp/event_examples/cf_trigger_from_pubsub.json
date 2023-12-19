@@ -1,0 +1,29 @@
+{
+  "attributes": {
+    "specversion": "1.0",
+    "id": "1234",
+    "source": "//pubsub.googleapis.com/projects/test/topics/dev-video-transcoded",
+    "type": "google.cloud.pubsub.topic.v1.messagePublished",
+    "datacontenttype": "application/json",
+    "time": "2023-12-19T11:49:49.285Z"
+  },
+  "data": {
+    "message": {
+      "attributes": {
+        "bucketId": "dev-serving",
+        "eventTime": "2023-12-19T11:49:49.248703Z",
+        "eventType": "OBJECT_FINALIZE",
+        "notificationConfig": "projects/_/buckets/dev-serving/notificationConfigs/10",
+        "objectGeneration": "5346463",
+        "objectId": "smpte-test2/1080p-ts.m3u8",
+        "payloadFormat": "JSON_API_V1"
+      },
+      "data": "hbsfgaksjchjeh434bjvkdvjksnkjsdjk9==",
+      "messageId": "1234",
+      "message_id": "1234",
+      "publishTime": "2023-12-19T11:49:49.285Z",
+      "publish_time": "2023-12-19T11:49:49.285Z"
+    },
+    "subscription": "projects/test/subscriptions/eventarc-asia-southeast1-dev-notification-432-sub-665"
+  }
+}
