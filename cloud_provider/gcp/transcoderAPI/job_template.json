@@ -1,0 +1,146 @@
+{
+  "config": {
+    "pubsubDestination": {
+      "topic": "projects/poc/topics/poc-noti-transcode-finished"
+    },
+    "elementaryStreams": [
+      {
+        "key": "video-360p",
+        "videoStream": {
+          "h264": {
+            "heightPixels": 360,
+            "widthPixels": 640,
+            "bitrateBps": 1000000,
+            "frameRate": 25,
+            "gopDuration": "2.0s",
+            "pixelFormat": "yuv420p",
+            "rateControlMode": "crf",
+            "crfLevel": 10,
+            "bFrameCount": 3,
+            "aqStrength": 1,
+            "profile": "main",
+            "tune": "film",
+            "preset": "medium"
+          }
+        }
+      },
+      {
+        "key": "video-480p",
+        "videoStream": {
+          "h264": {
+            "heightPixels": 480,
+            "widthPixels": 854,
+            "bitrateBps": 2500000,
+            "frameRate": 25,
+            "gopDuration": "2.0s",
+            "pixelFormat": "yuv420p",
+            "rateControlMode": "crf",
+            "crfLevel": 10,
+            "bFrameCount": 3,
+            "aqStrength": 1,
+            "profile": "high",
+            "tune": "film",
+            "preset": "medium"
+          }
+        }
+      },
+      {
+        "key": "video-720p",
+        "videoStream": {
+          "h264": {
+            "heightPixels": 720,
+            "widthPixels": 1280,
+            "bitrateBps": 7500000,
+            "frameRate": 50,
+            "gopDuration": "2.0s",
+            "pixelFormat": "yuv420p",
+            "rateControlMode": "crf",
+            "crfLevel": 10,
+            "bFrameCount": 3,
+            "aqStrength": 1,
+            "profile": "high",
+            "tune": "film",
+            "preset": "medium"
+          }
+        }
+      },
+      {
+        "key": "video-1080p",
+        "videoStream": {
+          "h264": {
+            "heightPixels": 1080,
+            "widthPixels": 1920,
+            "bitrateBps": 12000000,
+            "frameRate": 50,
+            "gopDuration": "2.0s",
+            "pixelFormat": "yuv420p",
+            "rateControlMode": "crf",
+            "crfLevel": 10,
+            "bFrameCount": 3,
+            "aqStrength": 1,
+            "profile": "high",
+            "tune": "film",
+            "preset": "medium"
+          }
+        }
+      },
+      {
+        "key": "audio-64k",
+        "audioStream": {
+          "codec": "aac",
+          "bitrateBps": 64000
+        }
+      },
+      {
+        "key": "audio-96k",
+        "audioStream": {
+          "codec": "aac",
+          "bitrateBps": 96000
+        }
+      },
+      {
+        "key": "audio-128k-l",
+        "audioStream": {
+          "codec": "aac-he",
+          "bitrateBps": 128000
+        }
+      },
+      {
+        "key": "audio-128k-h",
+        "audioStream": {
+          "codec": "aac-he-v2",
+          "bitrateBps": 128000
+        }
+      }
+    ],
+    "muxStreams": [
+      {
+        "key": "360p-ts",
+        "container": "ts",
+        "elementaryStreams": ["video-360p", "audio-64k"]
+      },
+      {
+        "key": "480p-ts",
+        "container": "ts",
+        "elementaryStreams": ["video-480p", "audio-96k"]
+      },
+      {
+        "key": "720p-ts",
+        "container": "ts",
+        "elementaryStreams": ["video-720p", "audio-128k-l"]
+      },
+      {
+        "key": "1080p-ts",
+        "container": "ts",
+        "elementaryStreams": ["video-1080p", "audio-128k-h"]
+      }
+    ],
+    "manifests": [
+      {
+        "fileName": "manifest.m3u8",
+        "type": "HLS",
+        "muxStreams": ["1080p-ts", "720p-ts", "480p-ts", "360p-ts"]
+      }
+    ]
+  }
+}
