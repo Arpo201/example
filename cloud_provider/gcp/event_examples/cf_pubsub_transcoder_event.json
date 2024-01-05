@@ -1,0 +1,20 @@
+{
+  "attributes": {
+    "specversion": "1.0",
+    "id": "1234",
+    "source": "//pubsub.googleapis.com/projects/test_project/topics/poc-dev-noti",
+    "type": "google.cloud.pubsub.topic.v1.messagePublished",
+    "datacontenttype": "application/json",
+    "time": "2024-01-05T05:04:21.233Z"
+  },
+  "data": {
+    "message": {
+      "data": "eyJqb2IiOnsibmFtZSI6InByb2plY3RzLzEyMzQvbG9jYXRpb25zL2FzaWEtc291dGhlYXN0MS9qb2JzLzI0MjczZTIyLWYzZDEtNGh2ZC1hNmQ0LTczZDk4YzciLCJzdGF0ZSI6IlNVQ0NFRURFRCJ9fQ==",
+      "messageId": "1234",
+      "message_id": "1234",
+      "publishTime": "2024-01-05T05:04:21.233Z",
+      "publish_time": "2024-01-05T05:04:21.233Z"
+    },
+    "subscription": "projects/test_project/subscriptions/eventarc-asia-southeast1-poc-notification-7283-sub-971"
+  }
+}
