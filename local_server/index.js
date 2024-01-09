@@ -1,17 +1,17 @@
 const express = require("express");
 const app = express();
-const port = 4000;
+const port = 8888;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   console.log(req.body);
+  return res.status(200).send(req.body);
 });
 
-app.post("/hook", (req, res) => {
+app.post("/fail", (req, res) => {
   console.log(req.body);
-  
   return res.status(400).send({"message":"fail"})
 });
 
