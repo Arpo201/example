@@ -1,0 +1,13 @@
+{
+  "name": "gcp_examplet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.mjs",
+  "scripts": {
+    "start": "functions-framework --target=main"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/video-transcoder": "^3.0.2"
+  }
+}
