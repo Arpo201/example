@@ -1,0 +1,28 @@
+### Multi-stages for decreasing image size
+## Builder
+FROM node:alpine3.18 as builder
+
+# Update for improve security
+# RUN apk update && apk upgrade
+
+# Add user
+RUN addgroup -S -g 2000 app && adduser -S -u 2000 app -G app -D
+WORKDIR /home/app
+RUN chown -R app:app .
+USER app
+
+# Install packages
+COPY --chown=app:app package.json .
+RUN npm install
+COPY --chown=app:app . .
+
+
+## Runtime
+FROM node:alpine3.18
+
+WORKDIR /home/app
+COPY --from=builder /home/app /home/app
+COPY --from=builder /etc/passwd /etc/passwd
+USER app
+EXPOSE 8080
+CMD ["npm", "start"]
