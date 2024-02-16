@@ -1,0 +1,30 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: custom-targets-pipeline
+serialPipeline:
+  stages:
+  - targetId: sample-env
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: sample-env
+customTarget:
+  customTargetType: basic-custom-target
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: CustomTargetType
+metadata:
+  name: basic-custom-target
+customActions:
+  renderAction: custom-render
+  deployAction: custom-deploy
+  includeSkaffoldModules:
+    - configs: ["test"]
+      git:
+        repo: https://github.com/appman-agm/certogo-iac-config
+        path: test/dev/*
+        ref: main

@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+customActions:
+- name: custom-render
+  containers:
+  - name: render
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli@sha256:66e2681aa3099b4e517e4cdcdefff8f2aa45d305007124ccdc09686f6712d018
+    command: ['/bin/bash']
+    args:
+      - '-c'
+      - |-
+        echo "Sample manifest rendered content" > manifest.txt
+        gsutil cp manifest.txt $CLOUD_DEPLOY_OUTPUT_GCS_PATH/manifest.txt
+        echo {\"resultStatus\": \"SUCCEEDED\", \"manifestFile\": \"$CLOUD_DEPLOY_OUTPUT_GCS_PATH/manifest.txt\"} > results.json
+        gsutil cp results.json $CLOUD_DEPLOY_OUTPUT_GCS_PATH/results.json
+- name: custom-deploy
+  containers:
+  - name: deploy
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli@sha256:66e2681aa3099b4e517e4cdcdefff8f2aa45d305007124ccdc09686f6712d018
+    command: ['/bin/bash']
+    args:
+      - '-c'
+      - |-
+        echo {\"resultStatus\": \"SUCCEEDED\"} > results.json
+        gsutil cp results.json $CLOUD_DEPLOY_OUTPUT_GCS_PATH/results.json
