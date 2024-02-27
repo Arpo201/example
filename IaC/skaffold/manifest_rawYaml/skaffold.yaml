@@ -1,0 +1,60 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: PROJECT_NAME
+
+requires:
+  - configs: ["dev-confg"]
+    activeProfiles:
+      - name: dev
+  - configs: ["uat-confg"]
+    activeProfiles:
+      - name: uat
+  - configs: ["prod-confg"]
+    activeProfiles:
+      - name: prod
+---
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: dev-config
+
+profiles:
+  - name: dev
+    manifests:
+      rawYaml:
+        - values-dev.yaml
+    deploy:
+      cloudrun:
+        projectid: PROJECT_NAME
+        region: asia-southeast1
+---
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: uat-config
+
+profiles:
+  - name: uat
+    manifests:
+      rawYaml:
+        - values-uat.yaml
+    deploy:
+      cloudrun:
+        projectid: PROJECT_NAME
+        region: asia-southeast1
+---
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: prod-config
+
+profiles:
+  - name: prod
+    manifests:
+      rawYaml:
+        - values-prod.yaml
+    deploy:
+      cloudrun:
+        projectid: PROJECT_NAME
+        region: asia-southeast1

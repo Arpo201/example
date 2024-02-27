@@ -1,0 +1,61 @@
+# Ref: https://cloud.google.com/run/docs/reference/yaml/v1#revision-name
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: CLOUD_DEPLOY_PROVIDE # from-param: ${service_name} <-- get value from cloud deploy (delivery pipeline)
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: 0 # set to 1 to escape cold start
+        autoscaling.knative.dev/maxScale: 1
+        run.googleapis.com/cpu-throttling: true #  true: allocate when vm get request | false: CPU always allocated
+        run.googleapis.com/startup-cpu-boost: true # Additional CPU for boost time
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/vpc-access-connector: CLOUD_DEPLOY_PROVIDE # from-param: ${enable_access_db}
+        run.googleapis.com/encryption-key: CLOUD_DEPLOY_PROVIDE # from-param: ${enable_cmek}
+        run.googleapis.com/vpc-access-egress: all-traffic
+        # run.googleapis.com/custom-audiences: '["*.run.app"]' # Only audiences domain can use cloudrun | Allow all users can't set by skaffold
+        run.googleapis.com/sessionAffinity: false # true: use same session (instance) | false: can route to any instance
+        run.googleapis.com/container-dependencies: '{"app":["datadog-agent"]}'
+    spec:
+      serviceAccountName: CLOUD_DEPLOY_PROVIDE # from-param: ${service_account_email}
+      containers:
+        - name: app
+          image: "asia-southeast1-docker.pkg.dev/PROJECT_NAME/PATH/IMAGE:latest"
+          ports:
+            - name: http1
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          env:
+            - name: ENVIRONMENT
+              value: dev
+            - name: PASS_AGRUMENT_1
+              value: null # from-param: ${test_arg_pipeline}
+
+          startupProbe:
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+            tcpSocket:
+              port: 8080
+
+          volumeMounts: # Use secret manager
+            - name: dot-env
+              mountPath: /secret
+
+      volumes: # Use secret manager
+        - name: dot-env
+          secret:
+            secretName: SECRET_NAME
+            items:
+              - key: "1"
+                path: .env

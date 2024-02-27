@@ -1,0 +1,12 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: test-uat
+spec:
+  template:
+    spec:
+      containers:
+        - image: "asia-southeast1-docker.pkg.dev/PROJECT_NAME/PATH/IMAGE:latest"
+          env:
+            - name: ENVIRONMENT
+              value: uat
