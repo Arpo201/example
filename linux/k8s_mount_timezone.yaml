@@ -23,12 +23,12 @@ spec:
             - "while true; do sleep 30; done;" 
           # env:
           #   - name: TZ
-          #     value: custom
+          #     value: custom_link
           volumeMounts:
             - name: tz-config
               mountPath: /etc/localtime
       volumes:
         - name: tz-config
           hostPath:
-            path: /usr/share/zoneinfo/Asia/Bangkok
+            path: /usr/share/zoneinfo/custom_link
             type: File
