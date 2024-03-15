@@ -9,10 +9,14 @@ app.get("/", (req, res) => {
   console.log(req.body);
   return res.status(200).send(req.body);
 });
+app.post("/", (req, res) => {
+  console.log(req.body);
+  return res.status(200).send(req.body);
+});
 
 app.post("/fail", (req, res) => {
   console.log(req.body);
-  return res.status(400).send({"message":"fail"})
+  return res.status(400).send({ message: "fail" });
 });
 
 app.listen(port, () => {
