@@ -1,0 +1,15 @@
+config:
+  resource:
+    requests:
+      cpu: ""
+      memory: ""
+    limits:
+      cpu: ""
+      memory: ""
+  env:
+    POSTGRES_USER: ""
+    POSTGRES_PASSWORD: ""
+    SRC_PGHOST: ""
+    DEST_PGHOST: ""
+    PGUSER: ""
+    PGPASSWORD: ""
