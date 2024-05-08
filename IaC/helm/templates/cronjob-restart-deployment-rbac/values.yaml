@@ -1,6 +1,0 @@
-k8s:
-  asg_name: test
-  namespace: test
-config:
-  deployment_target_name: test
-  cron_time: "0 19 * * *" # UTC Time - minus 7 hours (Runs at 02:00 AM TH time every day)
