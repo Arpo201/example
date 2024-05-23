@@ -6,19 +6,17 @@
   - name: Ensure connections
     ansible.builtin.ping:
 
-
-
-- name: Update mongodb servers
+- name: Update postgresql servers
   hosts: databases
   remote_user: root
 
   tasks:
-  - name: Ensure that mongodb server is installed
+  - name: Ensure that postgresql server is installed
     ansible.builtin.apt:
       name: postgresql
       state: latest
 
-  - name: Ensure that mongodb is started
+  - name: Ensure that postgresql is started
     ansible.builtin.service:
       name: postgresql
       state: started
