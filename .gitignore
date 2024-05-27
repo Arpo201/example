@@ -6,3 +6,6 @@
 *.cache
 *.ansible
 .bash_history
+
+# Redis
+*dump.rdb
