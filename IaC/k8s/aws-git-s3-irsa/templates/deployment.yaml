@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.infra.namespace }}
+  labels:
+    name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.infra.replicas }}
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}-sa
+      containers:
+      - name: {{ .Release.Name }}
+        image: amazon/aws-cli:2.15.58
+        imagePullPolicy: Always
+        command: ["/bin/bash", "-c", "--"]
+        args:
+          - |
+            /home/script/git-sync-s3.sh
+            while true; do sleep 30; done;
+        resources:
+          {{- with .Values.infra.resources }}
+          requests:
+            cpu: {{ default "10m" .requests.cpu }}
+            memory: {{ default "100Mi" .requests.memory }}
+          limits:
+            cpu: {{ default "100m" .limits.cpu }}
+            memory: {{ default "200Mi" .limits.memory }}
+          {{- end }}
+        volumeMounts:
+        - name: script
+          mountPath: "/home/script"
+          readOnly: true
+        - name: privatekey
+          mountPath: "/home/privatekey"
+          readOnly: true
+      volumes:
+      - name: script
+        configMap:
+          name: {{ .Release.Name }}-configmap
+          items:
+            - key: "git-sync-s3.sh"
+              path: "git-sync-s3.sh"
+          defaultMode: 0o755
+      - name: privatekey
+        secret:
+          secretName: {{ .Release.Name }}-ssh-auth-secret
+          items:
+            - key: "ssh-privatekey"
+              path: "ssh-privatekey"
+          defaultMode: 0o600

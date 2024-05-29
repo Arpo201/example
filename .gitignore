@@ -1,6 +1,7 @@
 *env
 *modules
 *.DS_Store
+.ssh*
 
 # Ansible
 *.cache

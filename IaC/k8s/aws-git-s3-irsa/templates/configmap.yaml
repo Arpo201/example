@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  git-sync-s3.sh: |
+    #!/bin/sh
+
+    yum install -y git
+
+    mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >>~/.ssh/known_hosts;
+    cp /home/privatekey/ssh-privatekey ~/.ssh;
+    echo "Host github.com" >> ~/.ssh/config;
+    echo "  IdentityFile ~/.ssh/ssh-privatekey" >> ~/.ssh/config;
+
+    OUTPUT_DIR="/home/$(echo '{{ .Values.config.gitSyncS3.gitRepo }}' | cut -d'/' -f 2)"
+    git clone --depth 1 --branch {{ default "main" .Values.config.tag }} "git@github.com:{{ .Values.config.gitSyncS3.gitRepo }}.git" $OUTPUT_DIR
+    cd $OUTPUT_DIR && {{ .Values.config.gitSyncS3.appBuildCmd }}
+    aws s3 sync --no-progres --size-only $OUTPUT_DIR/{{ .Values.config.gitSyncS3.appSyncPath }} s3://{{ .Values.config.gitSyncS3.s3Path }}/{{ .Values.config.tag }}

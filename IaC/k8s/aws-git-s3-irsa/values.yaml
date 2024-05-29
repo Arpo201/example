@@ -1,0 +1,20 @@
+infra:
+  namespace: default
+  replicas: 1
+  resources:
+    requests:
+      memory: "100Mi"
+      cpu: "100m"
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+
+config:
+  tag: ""
+  gitSyncS3:
+    awsRoleArn: ""
+    gitRepo: ""
+    gitSshPrivatekey: ""
+    appBuildCmd: "" # You are in git root path
+    appSyncPath: "" # You are in git root path
+    s3Path: ""
