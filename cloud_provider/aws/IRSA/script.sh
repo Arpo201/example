@@ -1,5 +1,5 @@
 export KUBECONFIG=~/.kube/arpo
-export AWS_PROFILE=dev03-admin
+export AWS_PROFILE=profile_name
 account_id=$(aws sts get-caller-identity --query "Account" --output text)
 oidc_provider=$(aws eks describe-cluster --name arpo --region ap-southeast-1 --query "cluster.identity.oidc.issuer" --output text | sed -e "s/^https:\/\///")
 export namespace=default
