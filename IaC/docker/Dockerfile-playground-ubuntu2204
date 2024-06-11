@@ -1,0 +1,19 @@
+FROM ubuntu:22.04
+RUN apt update && apt upgrade
+
+# Utility services
+RUN apt install -y vim
+
+# Network services
+RUN apt install -y curl inetutils-ping openssh-server
+
+# Setup ssh server
+RUN apt install -y openssh-server
+
+RUN mkdir -p /etc/ssh
+RUN echo "Port 30022" >> /etc/ssh/sshd_config
+
+RUN useradd --create-home --shell /bin/bash --password '' user01
+WORKDIR /home/user01
+USER user01
+COPY ./ssh/*.pub .ssh/
