@@ -2,6 +2,8 @@
 *modules
 *.DS_Store
 .ssh*
+*tmp*
+*test*
 
 # Ansible
 *.cache
