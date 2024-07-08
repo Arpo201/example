@@ -1,25 +1,40 @@
 #!/bin/bash
 
+# Usage: 
+## 1) export KUBECONFIG=~/.kube/config_file
+## 2) kubectl forward <DB_SERVER_ENDPOINT> 6000:5432
+## 3) Config variables such as PGUSER, PGPASSWORD, SRC_DB_ENDPOINT, etc
+## 4) ./migrate_target_dbs.sh DB1 DB2 DB3
+
 source "${BASH_SOURCE%/*}/_utils.sh"
 
-SRC_DB_ENDPOINT=$SRC_PGHOST
-DEST_DB_ENDPOINT=$DEST_PGHOST
 TARGET_DBS=("$@")
+export PGUSER="postgres"
+export PGPASSWORD=""
+
+SRC_DB_ENDPOINT=localhost
+SRC_PORT=5000
+
+DEST_DB_ENDPOINT=localhost
+DEST_PORT=6000
 
 for DB in "${TARGET_DBS[@]}"; do
+  (
+    echo -e "Migrating $DB database\n"
 
-  echo Migrating $DB database
+    create_db $DB $DEST_DB_ENDPOINT $DEST_PORT
+    create_user $DB $DEST_DB_ENDPOINT $DEST_PORT
+    add_user_privileges $DB $DEST_DB_ENDPOINT $DEST_PORT
 
-  drop_db $DB $DEST_DB_ENDPOINT
-  create_db $DB $DEST_DB_ENDPOINT
-  create_user $DB $DEST_DB_ENDPOINT
-  add_user_privileges $DB $DEST_DB_ENDPOINT
+    dump_db $DB $SRC_DB_ENDPOINT $SRC_PORT
+    restore_db $DB $DEST_DB_ENDPOINT $DEST_PORT "/tmp/backup/$DB.dump"
 
-  OUTPUT_FILE_PATH="$(dump_db $DB $SRC_DB_ENDPOINT | tail -n 1)"
-  restore_db $DB $DEST_DB_ENDPOINT "$OUTPUT_FILE_PATH"
-
-  vacuum_full_db $DB $DEST_DB_ENDPOINT
-  analyze_db $DB $DEST_DB_ENDPOINT
-  
-  echo Migrate $DB database successfully
+    vacuum_full_db $DB $DEST_DB_ENDPOINT $DEST_PORT
+    analyze_db $DB $DEST_DB_ENDPOINT $DEST_PORT
+    
+    echo -e "Migrate $DB database successfully\n"
+  ) &
 done
+
+unset PGUSER
+unset PGPASSWORD

@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # Run on local machine
-# export KUBECONFIG=~/.kube/kubeconfig_file
-# kubectl forward x.x.x.x 5000:5432
-
-# ./migrate_all_users_password.sh DB_ENDPOINT DB_PORT DB_USER DB_PASS K8S_CONFIG_PATH K8S_TARGET_NAMESPACE
-# example: ./migrate_all_users_password.sh localhost 5000 postgres P@ssword ~/.kube/kubeconfig_file default
+# export KUBECONFIG=~/.kube/config_file
+# kubectl forward 10.1.2.3 5000:5432
+# ./sync_db_credentials_from_k8s_secrets.sh DB_ENDPOINT DB_PORT DB_USER DB_PASS K8S_CONFIG_PATH K8S_TARGET_NAMESPACE
+# example: ./sync_db_credentials_from_k8s_secrets.sh localhost 5000 postgres admin1234 ~/.kube/config_file default
 
 DB_ENDPOINT=$1
 DB_PORT=$2

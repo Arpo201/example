@@ -11,7 +11,7 @@
 
 - `migrate_target_dbs.sh` จะ migrate ตาม db_names arguments ที่ใส่ไป ตัวอย่าง
   ```#!/bin/bash
-  ./migrate_target_dbs.sh db-dev db-qa db-accounts
+  ./migrate_target_dbs.sh mtl-dev-keycloak seic-dev-configuration-api agentmate-core-dev-configuration
   ```
 ## Copy scripts to pod
 ```#!/bin/bash
@@ -32,6 +32,6 @@ cd scripts && kubectl cp . <pod-name>:/root
 ## EC2
 config path: `/etc/postgresql/15/main/postgresql.conf`
 ```#!/bin/bash
-export AWS_PROFILE=dev04-admin
-aws ssm start-session --target i-0f46eb261ec1535a7
+export AWS_PROFILE=TEST-admin
+aws ssm start-session --target <EC2_ID>
 ```
