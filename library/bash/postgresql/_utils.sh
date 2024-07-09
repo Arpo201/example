@@ -132,35 +132,37 @@ EOF
 }
 
 function list_db {
-  local DB=$1
-  local DB_ENDPOINT=$2
-  local DB_PORT=$3
+  # Usage: list_tables $DB_ENDPOINT $DB_PORT
+  local DB_ENDPOINT=$1
+  local DB_PORT=$2
 
-  DBS=$(psql -h $DB_ENDPOINT -d $DB -p $DB_PORT -c "SELECT datname FROM pg_database WHERE datistemplate = false and datname NOT IN ('postgres', 'rdsadmin')")
+  DBS=$(psql -h $DB_ENDPOINT -p $DB_PORT -c "SELECT datname FROM pg_database WHERE datistemplate = false and datname NOT IN ('postgres', 'rdsadmin')")
   echo $DBS
 }
 
-# function list_tables {
-#   local DB=$1
-#   local USER=$2
-#   local DB_ENDPOINT=$3
-#   local DB_PORT=$4
-#   local SCHEMA_NAME=$5
+function list_tables {
+  # Usage: list_tables $DB $DB_USER $DB_ENDPOINT $DB_PORT $SCHEMA_NAME
+  local DB=$1
+  local USER=$2
+  local DB_ENDPOINT=$3
+  local DB_PORT=$4
+  local SCHEMA_NAME=$5
 
-#   TABLES=$(psql -h $DB_ENDPOINT -U $USER -d $DB -p $DB_PORT -c "SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = '$SCHEMA_NAME';")
-#   echo $TABLES
-# }
+  TABLES=$(psql -h $DB_ENDPOINT -U $USER -d $DB -p $DB_PORT -c "SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = '$SCHEMA_NAME';")
+  echo $TABLES
+}
 
-# function list_type {
-#   local DB=$1
-#   local USER=$2
-#   local DB_ENDPOINT=$3
-#   local DB_PORT=$4
-#   local SCHEMA_NAME=$5
+function list_type {
+  # Usage: list_type $DB $DB_USER $DB_ENDPOINT $DB_PORT $SCHEMA_NAME
+  local DB=$1
+  local USER=$2
+  local DB_ENDPOINT=$3
+  local DB_PORT=$4
+  local SCHEMA_NAME=$5
 
-#   TABLES=$(psql -h $DB_ENDPOINT -U $USER -d $DB -p $DB_PORT -c "SELECT n.nspname AS schema, t.typname AS enum_name, e.enumlabel AS enum_value FROM pg_type t     JOIN pg_enum e ON t.oid = e.enumtypid JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace ORDER BY schema, enum_name, e.enumsortorder;")
-#   echo $TABLES
-# }
+  TABLES=$(psql -h $DB_ENDPOINT -U $USER -d $DB -p $DB_PORT -c "SELECT n.nspname AS schema, t.typname AS enum_name, e.enumlabel AS enum_value FROM pg_type t JOIN pg_enum e ON t.oid = e.enumtypid JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace ORDER BY schema, enum_name, e.enumsortorder;")
+  echo $TABLES
+}
 
 # function change_table_owner {
 #   local DB=$1
@@ -182,7 +184,7 @@ function list_db {
 # ---------------------------------------------------
 
 function vacuum_full_db {
-  # Usage: vacuum_full_db $DB $DEST_DB_ENDPOINT $DEST_PORT
+  # Usage: vacuum_full_db $DB $DB_ENDPOINT $DB_PORT
   local DB=$1
   local DB_ENDPOINT=$2
   local DB_PORT=$3
@@ -193,7 +195,7 @@ function vacuum_full_db {
 }
 
 function analyze_db {
-  # Usage: analyze_db $DB $DEST_DB_ENDPOINT $DEST_PORT
+  # Usage: analyze_db $DB $DB_ENDPOINT $DB_PORT
   local DB=$1
   local DB_ENDPOINT=$2
   local DB_PORT=$3

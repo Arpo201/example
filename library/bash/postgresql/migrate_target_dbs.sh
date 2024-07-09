@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Usage: 
 ## 1) export KUBECONFIG=~/.kube/config_file
 ## 2) kubectl forward <DB_SERVER_ENDPOINT> 6000:5432
@@ -18,6 +20,8 @@ SRC_PORT=5000
 DEST_DB_ENDPOINT=localhost
 DEST_PORT=6000
 
+mkdir -p /tmp/backup/logs
+
 for DB in "${TARGET_DBS[@]}"; do
   (
     echo -e "Migrating $DB database\n"
@@ -33,7 +37,7 @@ for DB in "${TARGET_DBS[@]}"; do
     analyze_db $DB $DEST_DB_ENDPOINT $DEST_PORT
     
     echo -e "Migrate $DB database successfully\n"
-  ) &
+  ) 2>&1 | tee /tmp/backup/logs/$DB.log &
 done
 
 unset PGUSER
