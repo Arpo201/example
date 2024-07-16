@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Usage: 
 ## 1) export KUBECONFIG=~/.kube/config_file
 ## 2) kubectl forward <DB_SERVER_ENDPOINT> 6000:5432
