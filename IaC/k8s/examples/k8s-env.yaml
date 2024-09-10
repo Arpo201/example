@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: app
+    spec:
+      containers:
+        - name: app 
+          image: ubuntu
+          env:
+            - name: NAME
+              value: Alice
+            - name: TEAM
+              value: Bob
+            - name: CONFIG              # env name in container
+              valueFrom:
+                configMapKeyRef:
+                  name: test-configmap  # secret in k8s-cluster
+                  key: setting          # key of secret in k8s-cluster
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: test-secret     # configmap in k8s-cluster
+                  key: backend-username # key of configmap in k8s-cluster
+            - name: SECRET_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-user
+                  key: backend-username
+          envFrom:
+          - configMapRef:
+              name: test-configmap
+          - secretRef:
+              name: test-secret
+      restartPolicy: Always
