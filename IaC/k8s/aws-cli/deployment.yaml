@@ -14,16 +14,32 @@ spec:
       labels:
         app: aws-cli
     spec:
+      # serviceAccountName: aws-cli
       containers:
         - name: aws-cli
           image: amazon/aws-cli
           imagePullPolicy: Always
-          command: [ "/bin/bash", "-c", "--" ]
-          args: 
-            - "while true; do sleep 30; done;" 
-          # env:
-          #   - name: TZ
-          #     value: custom
+          command: ["/bin/bash", "-c", "--"]
+          args:
+            - "while true; do sleep 30; done;"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      # nodeSelector:
+      #   kubernetes.io/os: linux
+      #   eks.xxx.com/arch: "x86"
+      # tolerations:
+      #   - key: "eks.xxx.com/arch"
+      #     operator: "Equal"
+      #     value: "x86"
+      #     effect: "NoSchedule"
+            # env:
+            #   - name: TZ
+            #     value: custom
       #     volumeMounts:
       #       - name: tz-config
       #         mountPath: /etc/localtime
