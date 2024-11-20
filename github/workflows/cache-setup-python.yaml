@@ -1,0 +1,27 @@
+# Purpose: Cache installed pip packages
+# Description: actions/setup-python cache only downloaded packages but not cache installed packaged
+# Ref: https://github.com/actions/setup-python/issues/330#issuecomment-1416883170
+
+- name: Prepare requirement.txt with latest version
+  run: |
+    echo "checkov==$(pip --disable-pip-version-check index versions checkov 2>/dev/null | grep -oP "(?<=Available versions: )[^,]+")" >> requirements.txt
+    echo "pre-commit==$(pip --disable-pip-version-check index versions pre-commit 2>/dev/null | grep -oP "(?<=Available versions: )[^,]+")" >> requirements.txt
+
+- name: Setup Python
+  id: pip
+  uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+  with:
+    python-version: '3.10'
+    cache: 'pip' # caching pip dependencies
+    cache-dependency-path: 'requirements.txt'
+
+- name: Cache pip packages
+  uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
+  id: pip-packages-cache
+  with:
+    path: ${{ env.pythonLocation }}
+    key: ${{ runner.os }}-python${{ steps.pip.outputs.python-version }}-${{ hashFiles('requirements.txt') }}
+
+- name: Install pip packages
+  if: steps.pip-packages-cache.outputs.cache-hit != 'true'
+  run: pip install -r requirements.txt
