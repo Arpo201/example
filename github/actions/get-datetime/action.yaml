@@ -1,0 +1,31 @@
+# Ref: https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-composite-action
+
+name: Current datetime
+description: Get current datetime with specific timezone
+
+inputs:
+  timezone:
+    description: Speficy timezone that you want to retrieve
+    default: Asia/Bangkok
+    required: false
+
+outputs:
+  datetime:
+    description: "Current datetime"
+    value: ${{ steps.datetime.outputs.DATE_TIME }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set timezone
+      shell: bash
+      run: echo "TZ=${{ inputs.timezone }}" >> $GITHUB_ENV
+
+    - name: Set Datetime
+      id: datetime
+      shell: bash
+      run: |
+        date=$(date "+%d-%m-%Y %H:%M")          
+        echo 'DATE_TIME<<EOF' >> $GITHUB_OUTPUT
+        echo $date >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
