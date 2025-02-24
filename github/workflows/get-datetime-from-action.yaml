@@ -1,0 +1,18 @@
+# Purpose: Reuse action from github repo
+# Description: Call github action within steps of job
+# Ref: https://github.com/orgs/community/discussions/26245
+# Ref: https://www.jameskerr.blog/posts/sharing-steps-in-github-action-workflows/
+
+name: Get datetime
+on: workflow_dispatch
+
+jobs:
+  call_action:
+  - name: Get current datetime
+    id: datetime
+    uses: Arpo201/example/github/actions/get-datetime@main
+    with:
+      timezone: Asia/Bangkok
+
+  - name: Echo current datetime
+    run: echo "${{ local.steps.datetime.outputs.datetime }}"
