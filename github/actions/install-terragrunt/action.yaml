@@ -1,0 +1,31 @@
+name: Install terragrunt
+description: terragrunt installation with cache from binary file
+
+inputs:
+  version:
+    description: terragrunt version
+    required: false
+    default: 0.68.15
+  binary-location:
+    description: path of binary file to install such as "/usr/local/bin"
+    required: false
+    default: /usr/local/bin
+
+runs:
+  using: composite
+  steps:
+    - name: Cache files
+      uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
+      id: cache
+      with:
+        path: |
+          ${{ inputs.binary-location }}/terragrunt
+        key: ${{ runner.os }}-bash-terragrunt-v${{ inputs.version }}
+
+    - name: Download & Install
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        wget -O ${{ inputs.binary-location }}/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${{ inputs.version }}/terragrunt_$(uname | awk '{print tolower($0)}')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/i[3-6]86/386/' -e 's/arm64/arm64/')"
+        chmod +x ${{ inputs.binary-location }}/terragrunt
+        terragrunt -v

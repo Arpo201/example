@@ -1,0 +1,43 @@
+name: Install Terraform/Terragrunt from action
+
+on:
+  workflow_call:
+    inputs:
+      tf-version:
+        default: 1.9.3
+        required: false
+        type: string
+      tg-version:
+        default: 0.72.0
+        required: false
+        type: string
+      tg_plan_path:
+        default: "example/path/to/resource"
+        required: false
+        type: string
+      
+
+jobs:
+  iac:
+    name: "IaC"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Install terraform
+        uses: Arpo201/example/github/actions/install-terraform@main
+        with:
+          version: ${{ inputs.tf-version }}
+
+      - name: Install terragrunt
+        uses: Arpo201/example/github/actions/install-terragrunt@main
+        with:
+          version: ${{ inputs.tg-version }}
+      
+      - name: Terragrunt plan
+        continue-on-error: false
+        run: |
+          terragrunt plan --terragrunt-working-dir "${{ inputs.tg_plan_path }}" 2>&1
+          exit ${PIPESTATUS[0]}

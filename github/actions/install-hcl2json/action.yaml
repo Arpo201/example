@@ -1,0 +1,31 @@
+name: Install hcl2json
+description: hcl2json installation with cache from binary file
+
+inputs:
+  version:
+    description: hcl2json version
+    required: false
+    default: 0.6.4
+  binary-location:
+    description: path of binary file to install such as "/usr/local/bin"
+    required: false
+    default: /usr/local/bin
+
+runs:
+  using: composite
+  steps:
+    - name: Cache files
+      uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
+      id: cache
+      with:
+        path: |
+          ${{ inputs.binary-location }}/hcl2json
+        key: ${{ runner.os }}-bash-hcl2json-v${{ inputs.version }}
+
+    - name: Download & Install
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        wget -O ${{ inputs.binary-location }}/hcl2json "https://github.com/tmccombs/hcl2json/releases/download/v${{ inputs.version }}/hcl2json_$(uname | awk '{print tolower($0)}')_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/i[3-6]86/386/' -e 's/arm64/arm64/')"
+        chmod +x ${{ inputs.binary-location }}/hcl2json
+        hcl2json -v
