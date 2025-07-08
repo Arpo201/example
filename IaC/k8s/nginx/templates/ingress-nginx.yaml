@@ -2,19 +2,29 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Release.Name }}
-  namespace: {{ .Values.nginx.namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuerName }}
 spec:
-  ingressClassName: {{ .Values.nginx.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+  tls:
+  - hosts:
+    {{- range .Values.hosts }}
+    - {{ . }}
+    {{- end }}
+    secretName: {{ .Release.Name }}-tls
   rules:
-  - host: {{ .Values.nginx.host }}
+  {{- range .Values.hosts }}
+  - host: {{ . }}
     http:
       paths:
       - pathType: Prefix
         path: /
         backend:
           service:
-            name: {{ .Release.Name }}
+            name: {{ $.Release.Name }}
             port:
               number: 80
+  {{- end }}

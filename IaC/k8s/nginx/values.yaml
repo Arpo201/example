@@ -1,9 +1,18 @@
-nginx:
-  namespace: default
-  image: nginx:1.23.0
-  replicas: 1
-  host: nginx-test.arpo.website
-  ingress:
-    ingressClassName: nginx
-  service:
-    type: ClusterIP
+# namespace: sandbox
+# image: nginx:1.29
+# replicas: 1
+# hosts: 
+#   - example.internal.com
+#   - example.external.com
+# ingress:
+#   ingressClassName: ingress-nginx
+#   clusterIssuerName: cluster-ca-issuer
+# service:
+#   type: ClusterIP
+# tolerations:
+#   - key: "example.com/workload"
+#     operator: "Equal"
+#     value: "example-workload"
+#     effect: "NoSchedule"
+# nodeSelector:
+#   example.com/workload: "example-workload"
