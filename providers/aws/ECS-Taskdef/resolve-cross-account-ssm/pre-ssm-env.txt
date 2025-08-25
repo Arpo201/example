@@ -1,0 +1,2 @@
+TEST1=arn:aws:ssm:ap-southeast-7:111111111111:parameter/example/test1
+TEST2=arn:aws:ssm:ap-southeast-7:111111111111:parameter/example/test2
