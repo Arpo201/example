@@ -1,16 +1,19 @@
-#!/bin/bash
+#!/bin/sh
+
 # This script resolves AWS SSM parameters from a pre-defined environment file
-# Usage: ./resolve_ssm.bash pre-env.txt .env
+# Usage: ./resolve_ssm.sh pre-ssm-env.txt resolved-ssm.env
 
 # pre-env.txt example content:
 ## TEST1=arn:aws:ssm:ap-southeast-7:111111111111:parameter/my-parameter-1
 ## TEST2=arn:aws:ssm:ap-southeast-7:111111111111:parameter/my-parameter-2
 
-# .env file example content:
+# resolved-ssm.env file example content:
 ## export TEST1=value1
 ## export TEST2=value2
 
-# Use .env file command: source .env
+# Usage resolved-ssm.env file 
+## command: source resolved-ssm.env
+## command: mv resolved-ssm.env /etc/profile.d/1-resolved-ssm.sh
 
 if [ -z "$1" ]; then
   echo "Usage: $0 <input_file> <output_file>"
@@ -20,7 +23,10 @@ fi
 INPUT_FILE=$1
 OUTPUT_FILE=$2
 
-for line in $(cat pre-env.txt); do
+env | grep PREENV_ | sed 's/^PREENV_//' > $INPUT_FILE
+mkdir -p "$(dirname "$OUTPUT_FILE")"
+
+for line in $(cat "$INPUT_FILE"); do
   echo "Resolving $line"
 
   ENV_KEY=$(echo "$line" | cut -d'=' -f1)
@@ -29,3 +35,5 @@ for line in $(cat pre-env.txt); do
 
   echo "export $ENV_KEY=$(aws ssm get-parameter --region $AWS_REGION --name "$AWS_SSM_ARN" --with-decryption --query 'Parameter.Value' --output text)" >> $OUTPUT_FILE
 done
+
+chmod +x $OUTPUT_FILE
