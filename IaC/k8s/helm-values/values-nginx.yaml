@@ -1,9 +1,0 @@
-# helm upgrade --install nginx -f ~/Github/example/helm-values/values-nginx.yaml bitnami/nginx --version 15.0.1
-
-ingress:
-  enabled: true
-  hostname: nginx.arpo.website
-  ingressClassName: nginx
-
-service:
-  type: ClusterIP

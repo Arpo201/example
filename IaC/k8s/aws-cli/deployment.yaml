@@ -32,11 +32,11 @@ spec:
       # nodeSelector:
       #   kubernetes.io/os: linux
       #   eks.xxx.com/arch: "x86"
-      # tolerations:
-      #   - key: "eks.xxx.com/arch"
-      #     operator: "Equal"
-      #     value: "x86"
-      #     effect: "NoSchedule"
+      tolerations:
+        - key: "eks.abacusdigital.com/workload"
+          operator: "Equal"
+          value: "general-purpose"
+          effect: "NoSchedule"
             # env:
             #   - name: TZ
             #     value: custom
