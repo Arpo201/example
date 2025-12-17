@@ -1,0 +1,68 @@
+crds:
+  install: false
+
+images:
+  pullPolicy: IfNotPresent
+
+createAggregateRoles: false
+
+server:
+  enabled: true
+
+  serviceAccount:
+    create: true # hub cluster - server and controller required
+    name: argo-workflows # spoke cluster
+  rbac:
+    create: false # hub cluster - not required | spoke cluster - required
+  clusterWorkflowTemplates:
+    enabled: false
+
+  ingress:
+    enabled: true
+    ingressClassName: ingress-nginx
+    annotations:
+      cert-manager.io/cluster-issuer: internal-r53-ca-issuer
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    hosts:
+      - argo-workflows.hub.internal
+    tls:
+      - secretName: argo-workflows-tls
+        hosts:
+          - argo-workflows.hub.internal
+
+  tolerations:
+    - key: workload
+      operator: "Exists"
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      memory: 128Mi
+
+  secure: true
+
+  authModes:
+    - sso
+
+  extraArgs:
+    - --namespace=argo-workflows-spoke # spoke cluster
+
+  extraEnv:
+    - name: KUBECONFIG
+      value: /home/argo/.kube # Directory that contain config file
+  volumeMounts:
+    - name: kubeconfig
+      mountPath: /home/argo/.kube
+      subPath: config
+  volumes:
+    - name: kubeconfig
+      secret:
+        secretName: argo-workflows
+        items:
+          - key: kubeconfig
+            path: config
+  logging:
+    level: info
+    format: json

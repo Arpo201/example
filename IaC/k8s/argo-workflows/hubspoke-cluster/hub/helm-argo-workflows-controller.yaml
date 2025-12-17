@@ -1,0 +1,47 @@
+singleNamespace: false
+
+controller:
+  # controller read ConfigMap and Use K8s API from spoke cluster
+  serviceAccount:
+    create: false # hub cluster - use same SA with argo-workflows-server
+    name: argo-workflows # spoke cluster
+  rbac:
+    create: false
+  clusterWorkflowTemplates:
+    enabled: false
+  configMap:
+    create: false
+    name: argo-workflows-configmap # spoke cluster (required this key, it is used by chart)
+
+  # tolerations:
+  #   - key: workload
+  #     operator: "Exists"
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 20Mi
+    limits:
+      memory: 128Mi
+
+  extraArgs:
+    - --namespace=argo-workflows-spoke # spoke cluster
+
+  extraEnv:
+    - name: KUBECONFIG
+      value: /home/argo/.kube # Directory that contain config file
+  volumeMounts:
+    - name: kubeconfig
+      mountPath: /home/argo/.kube
+      subPath: config
+  volumes:
+    - name: kubeconfig
+      secret:
+        secretName: argo-workflows
+        items:
+          - key: kubeconfig
+            path: config
+
+  logging:
+    level: info
+    format: json

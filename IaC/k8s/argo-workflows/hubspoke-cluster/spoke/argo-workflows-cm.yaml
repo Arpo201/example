@@ -1,0 +1,169 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argo-workflows-configmap # hub cluster required
+data:
+  config: |
+    # Artifact Repository Configuration
+    artifactRepository:
+      archiveLogs: false
+      s3:
+        bucket: argo-workflows-spoke-ap-southeast-7
+        endpoint: s3.amazonaws.com
+        insecure: false
+        keyFormat: ""
+        region: ap-southeast-7
+        useSDKCreds: true
+
+    # Synchronization Configuration
+    synchronization:
+      controllerName: argo-workflows-controller
+      postgresql:
+        database: argo-workflows
+        host: hub-tools.hub.internal
+        passwordSecret:
+          name: argo-workflows-secret
+          key: postgresql_password
+        port: 5432
+        tableName: argo_workflows_synchronization
+        userNameSecret:
+          name: argo-workflows-secret
+          key: postgresql_username
+        # Connection pool optimization
+        ssl: false
+        sslMode: required
+
+    # Persistence Configuration
+    persistence:
+      archive: true
+      archiveTTL: 7d
+      clusterName: spoke
+      postgresql:
+        database: argo-workflows
+        host: hub-tools.hub.internal
+        passwordSecret:
+          name: argo-workflows-secret
+          key: postgresql_password
+        port: 5432
+        tableName: argo_workflows_persistence
+        userNameSecret:
+          name: argo-workflows-secret
+          key: postgresql_username
+        # Connection pool optimization
+        ssl: false
+        sslMode: required
+
+    # Performance Optimizations
+    nodeEvents:
+      enabled: true
+    workflowEvents:
+      enabled: true
+
+    # Resource limits and throttling
+    workflowRestrictions:
+      templateReferencing: Strict
+
+    # Workflow defaults for better resource management
+    workflowDefaults:
+      metadata:
+        labels:
+          environment: "spoke"
+        annotations: {}
+      spec:
+        # Archive logs for all workflows by default
+        archiveLogs: false
+        # Automatic cleanup of completed workflows
+        ttlStrategy:
+          secondsAfterSuccess: 86400     # 24 hours
+          secondsAfterFailure: 604800    # 7 days
+        # Prevent runaway workflows
+        activeDeadlineSeconds: 86400     # 1 day max
+        # Pod GC strategy
+        podGC:
+          strategy: OnWorkflowCompletion
+          deleteDelayDuration: 86400s   # 1 day
+        # Tolerations for scheduling on dedicated nodes
+        # tolerations:
+        #   - key: workload
+        #     operator: Equal
+        #     value: cronjob
+        #     effect: NoSchedule
+        # Default priority for workflow scheduling
+        priority: 0
+        # Workflow-level parallelism (max concurrent pods per workflow)
+        parallelism: 5
+        # Default resource limits for all templates
+        templateDefaults:
+          timeout: 10800s   # 3 hours per template
+          retryStrategy:
+            limit: 2
+            retryPolicy: "Always"
+            backoff:
+              duration: "30s"
+              factor: 2
+              maxDuration: "5m"
+          container:
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "1000m"
+          # Security Context Configuration:
+          # Default security context is disabled because company Docker images
+          # use different user configurations (non-standard UIDs/GIDs).
+          # Individual workflows should define their own securityContext based on
+          # the specific container image requirements.
+          #
+          # Example for standard images:
+          # securityContext:
+          #   runAsNonRoot: true
+          #   runAsUser: 1000
+          #   runAsGroup: 1000
+          #   fsGroup: 1000
+          #   allowPrivilegeEscalation: false
+          #   readOnlyRootFilesystem: true
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          #
+          # For company-specific images, check the Dockerfile USER directive
+          # and set appropriate UID/GID values in individual workflow templates.
+
+    # Controller performance tuning
+    parallelism: 10              # Max concurrent workflows (controller-level)
+    namespaceParallelism: 5      # Max concurrent workflows per namespace
+
+    # SSO Configuration
+    SSO:
+      issuer: https://login.microsoftonline.com/a1234bc-def5-67g8-9012-hi3jk4567l8m/v2.0
+      clientId:
+        name: argo-workflows-secret
+        key: azure_client_id
+      clientSecret:
+        name: argo-workflows-secret
+        key: azure_client_secret
+      redirectUrl: https://argo-workflows.hub.internal/oauth2/callback
+      InsecureSkipVerify: false
+      Scopes:
+        - openid
+        - email
+      # RBAC configuration
+      # rbac:
+      #   enabled: true
+
+    # # Metrics and monitoring
+    # metricsConfig:
+    #   enabled: true
+    #   path: /metrics
+    #   port: 9090
+
+    # # Links for better UX
+    # links:
+    #   - name: "Workflow Logs"
+    #     scope: "workflow"
+    #     url: "https://logs.argo-workflows.hub.internal/workflows/${metadata.namespace}/${metadata.name}"
+    #   - name: "Pod Logs"
+    #     scope: "pod"
+    #     url: "https://logs.argo-workflows.hub.internal/pods/${metadata.namespace}/${metadata.name}"

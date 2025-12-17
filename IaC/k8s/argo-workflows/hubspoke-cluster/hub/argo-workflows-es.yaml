@@ -1,0 +1,19 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: argo-workflows
+spec:
+  refreshPolicy: OnChange
+  refreshInterval: "0" # 0 mean not periodic pull (manual trigger when changed)
+  secretStoreRef:
+    name: argo-workflows-aws-security-account-ssm-th
+    kind: ClusterSecretStore
+  target:
+    name: argo-workflows
+    creationPolicy: Owner
+  data:
+    - secretKey: kubeconfig
+      remoteRef:
+        key: arn:aws:ssm:ap-southeast-7:111111111111:parameter/spoke/argo-workflows
+        property: k8s_workload_kubeconfig_base64
+        decodingStrategy: Base64

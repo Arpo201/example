@@ -1,0 +1,30 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: argo-workflows
+spec:
+  refreshPolicy: OnChange
+  refreshInterval: "0" # 0 mean not periodic pull (manual trigger when changed)
+  secretStoreRef:
+    name: argo-workflows-aws-security-account-ssm-th
+    kind: ClusterSecretStore
+  target:
+    name: argo-workflows-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: postgresql_username
+      remoteRef:
+        key: arn:aws:ssm:ap-southeast-7:111111111111:parameter/spoke/argo-workflows
+        property: postgresql_username
+    - secretKey: postgresql_password
+      remoteRef:
+        key: arn:aws:ssm:ap-southeast-7:111111111111:parameter/spoke/argo-workflows
+        property: postgresql_password
+    - secretKey: azure_client_id
+      remoteRef:
+        key: arn:aws:ssm:ap-southeast-7:111111111111:parameter/spoke/argo-workflows
+        property: azure_client_id
+    - secretKey: azure_client_secret
+      remoteRef:
+        key: arn:aws:ssm:ap-southeast-7:111111111111:parameter/spoke/argo-workflows
+        property: azure_client_secret

@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: argo-workflows-spoke
+  annotations:
+    description: Kustomization for configuration of argo-workflow in hub cluster
+labels:
+  - pairs:
+      app.kubernetes.io/instance: argo-workflows-spoke
+
+resources:
+- argo-workflows-cm.yaml
+- argo-workflows-sa.yaml
+- argo-workflows-es.yaml
+- argo-workflows-executor-cr.yaml
