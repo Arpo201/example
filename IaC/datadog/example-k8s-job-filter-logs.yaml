@@ -1,0 +1,46 @@
+# Test job for Datadog log collection and service discovery
+# Ref: https://docs.datadoghq.com/agent/logs/advanced_log_collection/?tab=kubernetes#exclude-at-match
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-datadog
+  namespace: test
+spec:
+  ttlSecondsAfterFinished: 120  # Auto-cleanup after 2 minutes
+  template:
+    metadata:
+      labels:
+        tags.datadoghq.com/service: test-datadog  # required
+      annotations:
+        ad.datadoghq.com/logger.logs: >-
+          [{
+            "source": "alpine",
+            "service": "test-datadog",
+            "log_processing_rules": [{
+              "type": "include_at_match",
+              "name": "include_only_errors",
+              "pattern": "\"level\":\"error\""
+            }]
+          }]
+        # ad.datadoghq.com/exclude: "true"
+    spec:
+      restartPolicy: Never
+      # Allow scheduling on spot instances
+      # tolerations:
+      # - operator: Exists
+      #   effect: "NoSchedule"
+      containers:
+      - name: logger
+        image: alpine:3.19
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # Run for 1 minutes, emit JSON logs every 2 seconds
+          end=$(($(date +%s) + 60))
+          while [ $(date +%s) -lt $end ]; do
+            echo "{\"level\":\"info\",\"timestamp\":\"$(date -Iseconds)\",\"message\":\"Processing request\",\"request_id\":\"$(cat /dev/urandom | tr -dc 'a-z0-9' | head -c 8)\"}"
+            sleep 1
+            echo "{\"level\":\"error\",\"timestamp\":\"$(date -Iseconds)\",\"message\":\"Failed to connect to database\",\"error\":\"connection timeout\"}" >&2
+            sleep 1
+          done
