@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ArgoCD OAuth Callback URL Changes</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 960px; margin: 40px auto; padding: 0 24px; color: #1a1a1a; }
+  h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  p.sub { color: #666; font-size: 0.9rem; margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 0.88rem; }
+  th { background: #1e3a5f; color: #fff; padding: 10px 14px; text-align: left; }
+  td { padding: 10px 14px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  tr:hover td { background: #f9fafb; }
+  .env { font-weight: 600; white-space: nowrap; }
+  .sandbox { color: #0369a1; }
+  .nonprod  { color: #7c3aed; }
+  .prod     { color: #b91c1c; }
+  .old { color: #6b7280; text-decoration: line-through; }
+  .new { color: #15803d; font-weight: 500; }
+  .type { color: #374151; font-size: 0.8rem; background: #f3f4f6; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<h1>🔐 ArgoCD OAuth Callback URL Changes</h1>
+<p class="sub">Domain migration — update OAuth app redirect URIs accordingly</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Environment</th>
+      <th>Type</th>
+      <th>Old URL</th>
+      <th>New URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Sandbox -->
+    <tr>
+      <td class="env sandbox" rowspan="2">Sandbox</td>
+      <td><span class="type">Web</span></td>
+      <td class="old">https://argocd.k8s-app-sandbox.internal/auth/callback</td>
+      <td class="new">https://argo-cd-sandbox-pri.example-dev.com/auth/callback</td>
+    </tr>
+    <tr>
+      <td><span class="type">Mobile &amp; Desktop</span></td>
+      <td class="old">https://argocd.k8s-app-sandbox.internal:8085/auth/callback</td>
+      <td class="new">https://argo-cd-sandbox-pri.example-dev.com:8085/auth/callback</td>
+    </tr>
+    <!-- Nonprod -->
+    <tr>
+      <td class="env nonprod" rowspan="2">Non-Prod</td>
+      <td><span class="type">Web</span></td>
+      <td class="old">https://argocd.k8s-app-nonprod.internal/auth/callback</td>
+      <td class="new">https://argo-cd-nonprod-pri.example-dev.com/auth/callback</td>
+    </tr>
+    <tr>
+      <td><span class="type">Mobile &amp; Desktop</span></td>
+      <td class="old">https://argocd.k8s-app-nonprod.internal:8085/auth/callback</td>
+      <td class="new">https://argo-cd-nonprod-pri.example-dev.com:8085/auth/callback</td>
+    </tr>
+    <!-- Prod -->
+    <tr>
+      <td class="env prod" rowspan="2">Production</td>
+      <td><span class="type">Web</span></td>
+      <td class="old">https://argocd.k8s-app-prod.internal/auth/callback</td>
+      <td class="new">https://argo-cd-pri.example-prod.com/auth/callback</td>
+    </tr>
+    <tr>
+      <td><span class="type">Mobile &amp; Desktop</span></td>
+      <td class="old">https://argocd.k8s-app-prod.internal:8085/auth/callback</td>
+      <td class="new">https://argo-cd-pri.example-prod.com:8085/auth/callback</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
