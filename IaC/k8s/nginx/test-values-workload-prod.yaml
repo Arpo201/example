@@ -1,0 +1,18 @@
+namespace: test
+image: nginx:1.29
+replicas: 1
+hosts: 
+  # - test-eks-ncb-gateway.scbabacus.io
+  - test-eks-ncb-gateway.abacus-dev.com
+ingress:
+  ingressClassName: internal-ingress-nginx
+  clusterIssuerName: internal-r53-ca-issuer
+service:
+  type: ClusterIP
+tolerations:
+  - key: eks.abacusdigital.com/workload
+    operator: Equal
+    value: general-purpose
+    effect: NoSchedule
+nodeSelector:
+  eks.abacusdigital.com/workload: general-purpose

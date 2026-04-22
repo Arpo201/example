@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 8888;
-const DIR = __dirname;
+const DIR = `${__dirname}/docs`;
 const DEBOUNCE_MS = 300;
 
 // --- SSE clients ---

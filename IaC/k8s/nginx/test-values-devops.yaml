@@ -1,0 +1,11 @@
+nginx:
+  namespace: platform-nonprod
+  image: nginx:1.27
+  replicas: 1
+  hosts: 
+    - test.k8s-devops-nonprod.internal
+  ingress:
+    ingressClassName: internal-ingress-nginx-platform-nonprod
+    clusterIssuerName: internal-r53-ca-issuer
+  service:
+    type: ClusterIP
