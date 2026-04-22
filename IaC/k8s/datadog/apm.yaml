@@ -1,38 +1,28 @@
-# Test job for Datadog log collection and service discovery
-# Ref: https://docs.datadoghq.com/agent/logs/advanced_log_collection/?tab=kubernetes#exclude-at-match
+# Purpose: Generate Datadog with APM
 
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: test-datadog
-  namespace: test
+  namespace: default
 spec:
-  ttlSecondsAfterFinished: 120  # Auto-cleanup after 2 minutes
+  ttlSecondsAfterFinished: 120
   template:
     metadata:
       labels:
         tags.datadoghq.com/service: test-datadog  # required
-      annotations:
-        ad.datadoghq.com/logger.logs: >-
-          [{
-            "source": "alpine",
-            "service": "test-datadog",
-            "log_processing_rules": [{
-              "type": "include_at_match",
-              "name": "include_only_errors",
-              "pattern": "\"level\":\"error\""
-            }]
-          }]
-        # ad.datadoghq.com/exclude: "true"
+        admission.datadoghq.com/enabled: "true"
+      # annotations:
+        # admission.datadoghq.com/js-lib.version: "v1.0.0"
+        # admission.datadoghq.com/ruby-lib.version: "v1.0.0"
     spec:
       restartPolicy: Never
-      # Allow scheduling on spot instances
-      # tolerations:
-      # - operator: Exists
-      #   effect: "NoSchedule"
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
       containers:
-      - name: logger
-        image: alpine:3.19
+      - name: test-datadog
+        image: alpine:latest
         command: ["/bin/sh", "-c"]
         args:
         - |
